@@ -2,7 +2,6 @@
 
 """Tests for `scorchgeo` package."""
 
-
 import unittest
 
 from scorchgeo import scorchgeo

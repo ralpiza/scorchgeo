@@ -10,7 +10,7 @@
 
 -   Free software: MIT License
 -   Documentation: https://ralpiza.github.io/scorchgeo
-    
+
 
 ## Features
 
