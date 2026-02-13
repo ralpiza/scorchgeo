@@ -1,4 +1,0 @@
-
-# scorchgeo module
-
-::: scorchgeo.scorchgeo
