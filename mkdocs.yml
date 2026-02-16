@@ -81,6 +81,8 @@ nav:
     - Report Issues: https://github.com/ralpiza/scorchgeo/issues
     - Examples:
         - examples/intro.ipynb
+        - examples/map.ipynb
+
     - API Reference:
           - scorchgeo module: scorchgeo.md
           - common module: common.md
