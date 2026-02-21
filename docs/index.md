@@ -20,5 +20,5 @@
 ## Usage
 
 ```python
-import schorch
+import scorch
 ```
