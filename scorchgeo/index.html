@@ -702,6 +702,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#scorchgeo.scorchgeo.Map.add_basemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_basemap()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#scorchgeo.scorchgeo.Map.add_gdf" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -844,6 +855,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#scorchgeo.scorchgeo.Map.add_basemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_basemap()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#scorchgeo.scorchgeo.Map.add_gdf" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -958,8 +980,14 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">LayersControl</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scroll_wheel_zoom</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span> <span class="o">=</span> <span class="s2">&quot;OpenTopoMap&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span><span class="o">=</span><span class="s2">&quot;OpenTopoMap&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add basemap to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            basemap (str, optional): Basemap name. Defaults to &quot;OpenTopoMap&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ipyleaflet.basemaps.</span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build_url</span><span class="p">()</span>
         <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">basemap</span><span class="p">)</span>
@@ -972,22 +1000,19 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
         <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a GeoJSON layer to the map.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add GeoJSON data to the map.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data (str or dict): The GeoJSON data. Can be a file path (str) or a dictionary.</span>
-<span class="sd">            zoom_to_layer (bool, optional): Whether to zoom to the layer&#39;s bounds. Defaults to True.</span>
-<span class="sd">            hover_style (dict, optional): Style to apply when hovering over features. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
-<span class="sd">            **kwargs: Additional keyword arguments for the ipyleaflet.GeoJSON layer.</span>
+<span class="sd">            data (str or dict): Path to a GeoJSON file or a GeoJSON dictionary.</span>
+<span class="sd">            zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.</span>
+<span class="sd">            hover_style (dict, optional): Style applied on hover. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If the data type is invalid.</span>
+<span class="sd">            FileNotFoundError: If the provided file path does not exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-
         <span class="k">if</span> <span class="n">hover_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">hover_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
@@ -1000,52 +1025,95 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
             <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">([[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_shp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a shapefile to the map.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_shp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">layer_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a shapefile to the map.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data (str): The file path to the shapefile.</span>
-<span class="sd">            **kwargs: Additional keyword arguments for the GeoJSON layer.</span>
+<span class="sd">            data (str or dict): Path to a shapefile or a GeoJSON dictionary.</span>
+<span class="sd">            layer_name (str, optional): Name of the layer. Defaults to the filename if data is a path.</span>
+<span class="sd">            hover_style (dict, optional): Style applied on hover. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+        <span class="k">if</span> <span class="n">hover_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hover_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">layer_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">geojson</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">GeoJSON</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">layer_name</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
 
-        <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
-        <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span><span class="n">geojson</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_gdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a GeoDataFrame to the map.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_gdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a GeoDataFrame to the map.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            gdf (geopandas.GeoDataFrame): The GeoDataFrame to add.</span>
-<span class="sd">            **kwargs: Additional keyword arguments for the GeoJSON layer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
-        <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span><span class="n">geojson</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds vector data to the map.</span>
+<span class="sd">        Converts the GeoDataFrame to WGS84 (EPSG:4326) if necessary before adding to map.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data (str, geopandas.GeoDataFrame, or dict): The vector data. Can be a file path, GeoDataFrame, or GeoJSON dictionary.</span>
-<span class="sd">            **kwargs: Additional keyword arguments for the GeoJSON layer.</span>
+<span class="sd">            gdf (geopandas.GeoDataFrame): A GeoDataFrame to add to the map.</span>
+<span class="sd">            zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If the data type is invalid.</span>
+<span class="sd">            TypeError: If the input is not a GeoDataFrame.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input must be a GeoDataFrame.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Ensure WGS84</span>
+        <span class="k">if</span> <span class="n">gdf</span><span class="o">.</span><span class="n">crs</span> <span class="o">!=</span> <span class="s2">&quot;EPSG:4326&quot;</span><span class="p">:</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
+
+            <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">GeoJSON</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">zoom_to_layer</span><span class="p">:</span>
+            <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">([[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add vector data to the map from multiple supported formats.</span>
+
+<span class="sd">        Accepts file paths (shapefiles, GeoJSON), GeoDataFrames, or GeoJSON dictionaries.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (str, geopandas.GeoDataFrame, or dict): Vector data as a file path, GeoDataFrame, or GeoJSON dictionary.</span>
+<span class="sd">            hover_style (dict, optional): Style applied on hover. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
+<span class="sd">            zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the data type is not supported (must be str, GeoDataFrame, or dict).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+
+        <span class="k">if</span> <span class="n">hover_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hover_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span>
+                <span class="n">gdf</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="n">zoom_to_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="n">zoom_to_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="n">zoom_to_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid data type&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Unsupported data type. Please provide a file path, GeoDataFrame, or GeoJSON dictionary.&quot;</span>
+            <span class="p">)</span>
 </code></pre></div>
         </details>
 
@@ -1062,20 +1130,73 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
 
 
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="scorchgeo.scorchgeo.Map.add_basemap" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span><span class="o">=</span><span class="s1">&#39;OpenTopoMap&#39;</span><span class="p">)</span></code>
+
+
+<a href="#scorchgeo.scorchgeo.Map.add_basemap" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add basemap to the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>basemap</code></td>
+        <td><code>str</code></td>
+        <td><p>Basemap name. Defaults to "OpenTopoMap".</p></td>
+        <td><code>&#39;OpenTopoMap&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>scorchgeo/scorchgeo.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span><span class="o">=</span><span class="s2">&quot;OpenTopoMap&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add basemap to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        basemap (str, optional): Basemap name. Defaults to &quot;OpenTopoMap&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ipyleaflet.basemaps.</span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build_url</span><span class="p">()</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">basemap</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
 
   <div class="doc doc-object doc-method">
 
 
 
 <h3 id="scorchgeo.scorchgeo.Map.add_gdf" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_gdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_gdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#scorchgeo.scorchgeo.Map.add_gdf" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
-      <p>Adds a GeoDataFrame to the map.</p>
+      <p>Add a GeoDataFrame to the map.</p>
+<p>Converts the GeoDataFrame to WGS84 (EPSG:4326) if necessary before adding to map.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -1091,29 +1212,69 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       <tr>
         <td><code>gdf</code></td>
         <td><code>geopandas.GeoDataFrame</code></td>
-        <td><p>The GeoDataFrame to add.</p></td>
+        <td><p>A GeoDataFrame to add to the map.</p></td>
         <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>zoom_to_layer</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to zoom to the bounds of the layer. Defaults to True.</p></td>
+        <td><code>True</code></td>
       </tr>
       <tr>
         <td><code>**kwargs</code></td>
         <td></td>
-        <td><p>Additional keyword arguments for the GeoJSON layer.</p></td>
+        <td><p>Additional keyword arguments to pass to ipyleaflet.GeoJSON.</p></td>
         <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>TypeError</code></td>
+        <td><p>If the input is not a GeoDataFrame.</p></td>
       </tr>
   </tbody>
 </table>
         <details class="quote">
           <summary>Source code in <code>scorchgeo/scorchgeo.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_gdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a GeoDataFrame to the map.</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_gdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a GeoDataFrame to the map.</span>
+
+<span class="sd">    Converts the GeoDataFrame to WGS84 (EPSG:4326) if necessary before adding to map.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        gdf (geopandas.GeoDataFrame): The GeoDataFrame to add.</span>
-<span class="sd">        **kwargs: Additional keyword arguments for the GeoJSON layer.</span>
+<span class="sd">        gdf (geopandas.GeoDataFrame): A GeoDataFrame to add to the map.</span>
+<span class="sd">        zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.</span>
+<span class="sd">        **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If the input is not a GeoDataFrame.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
-    <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span><span class="n">geojson</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input must be a GeoDataFrame.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Ensure WGS84</span>
+    <span class="k">if</span> <span class="n">gdf</span><span class="o">.</span><span class="n">crs</span> <span class="o">!=</span> <span class="s2">&quot;EPSG:4326&quot;</span><span class="p">:</span>
+        <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
+
+        <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">GeoJSON</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">zoom_to_layer</span><span class="p">:</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">([[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
 </code></pre></div>
         </details>
     </div>
@@ -1134,7 +1295,7 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
     <div class="doc doc-contents ">
 
-      <p>Adds a GeoJSON layer to the map.</p>
+      <p>Add GeoJSON data to the map.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -1150,25 +1311,25 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       <tr>
         <td><code>data</code></td>
         <td><code>str or dict</code></td>
-        <td><p>The GeoJSON data. Can be a file path (str) or a dictionary.</p></td>
+        <td><p>Path to a GeoJSON file or a GeoJSON dictionary.</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>zoom_to_layer</code></td>
         <td><code>bool</code></td>
-        <td><p>Whether to zoom to the layer's bounds. Defaults to True.</p></td>
+        <td><p>Whether to zoom to the bounds of the layer. Defaults to True.</p></td>
         <td><code>True</code></td>
       </tr>
       <tr>
         <td><code>hover_style</code></td>
         <td><code>dict</code></td>
-        <td><p>Style to apply when hovering over features. Defaults to {"color": "yellow", "fillOpacity": 0.2}.</p></td>
+        <td><p>Style applied on hover. Defaults to {"color": "yellow", "fillOpacity": 0.2}.</p></td>
         <td><code>None</code></td>
       </tr>
       <tr>
         <td><code>**kwargs</code></td>
         <td></td>
-        <td><p>Additional keyword arguments for the ipyleaflet.GeoJSON layer.</p></td>
+        <td><p>Additional keyword arguments to pass to ipyleaflet.GeoJSON.</p></td>
         <td><code>{}</code></td>
       </tr>
   </tbody>
@@ -1183,8 +1344,8 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
   </thead>
   <tbody>
       <tr>
-        <td><code>ValueError</code></td>
-        <td><p>If the data type is invalid.</p></td>
+        <td><code>FileNotFoundError</code></td>
+        <td><p>If the provided file path does not exist.</p></td>
       </tr>
   </tbody>
 </table>
@@ -1197,22 +1358,19 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
     <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a GeoJSON layer to the map.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add GeoJSON data to the map.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data (str or dict): The GeoJSON data. Can be a file path (str) or a dictionary.</span>
-<span class="sd">        zoom_to_layer (bool, optional): Whether to zoom to the layer&#39;s bounds. Defaults to True.</span>
-<span class="sd">        hover_style (dict, optional): Style to apply when hovering over features. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
-<span class="sd">        **kwargs: Additional keyword arguments for the ipyleaflet.GeoJSON layer.</span>
+<span class="sd">        data (str or dict): Path to a GeoJSON file or a GeoJSON dictionary.</span>
+<span class="sd">        zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.</span>
+<span class="sd">        hover_style (dict, optional): Style applied on hover. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
+<span class="sd">        **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If the data type is invalid.</span>
+<span class="sd">        FileNotFoundError: If the provided file path does not exist.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-
     <span class="k">if</span> <span class="n">hover_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">hover_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
-
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
@@ -1237,14 +1395,14 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
 
 <h3 id="scorchgeo.scorchgeo.Map.add_shp" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_shp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_shp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">layer_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#scorchgeo.scorchgeo.Map.add_shp" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
-      <p>Adds a shapefile to the map.</p>
+      <p>Add a shapefile to the map.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -1259,33 +1417,54 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
   <tbody>
       <tr>
         <td><code>data</code></td>
-        <td><code>str</code></td>
-        <td><p>The file path to the shapefile.</p></td>
+        <td><code>str or dict</code></td>
+        <td><p>Path to a shapefile or a GeoJSON dictionary.</p></td>
         <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Name of the layer. Defaults to the filename if data is a path.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>hover_style</code></td>
+        <td><code>dict</code></td>
+        <td><p>Style applied on hover. Defaults to {"color": "yellow", "fillOpacity": 0.2}.</p></td>
+        <td><code>None</code></td>
       </tr>
       <tr>
         <td><code>**kwargs</code></td>
         <td></td>
-        <td><p>Additional keyword arguments for the GeoJSON layer.</p></td>
+        <td><p>Additional keyword arguments to pass to ipyleaflet.GeoJSON.</p></td>
         <td><code>{}</code></td>
       </tr>
   </tbody>
 </table>
         <details class="quote">
           <summary>Source code in <code>scorchgeo/scorchgeo.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_shp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a shapefile to the map.</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_shp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">layer_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a shapefile to the map.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data (str): The file path to the shapefile.</span>
-<span class="sd">        **kwargs: Additional keyword arguments for the GeoJSON layer.</span>
+<span class="sd">        data (str or dict): Path to a shapefile or a GeoJSON dictionary.</span>
+<span class="sd">        layer_name (str, optional): Name of the layer. Defaults to the filename if data is a path.</span>
+<span class="sd">        hover_style (dict, optional): Style applied on hover. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
+<span class="sd">        **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
-    <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span><span class="n">geojson</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hover_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">hover_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">layer_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">geojson</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">geojson</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">GeoJSON</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">geojson</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">layer_name</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -1299,14 +1478,15 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
 
 <h3 id="scorchgeo.scorchgeo.Map.add_vector" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#scorchgeo.scorchgeo.Map.add_vector" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
-      <p>Adds vector data to the map.</p>
+      <p>Add vector data to the map from multiple supported formats.</p>
+<p>Accepts file paths (shapefiles, GeoJSON), GeoDataFrames, or GeoJSON dictionaries.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -1322,13 +1502,25 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       <tr>
         <td><code>data</code></td>
         <td><code>str, geopandas.GeoDataFrame, or dict</code></td>
-        <td><p>The vector data. Can be a file path, GeoDataFrame, or GeoJSON dictionary.</p></td>
+        <td><p>Vector data as a file path, GeoDataFrame, or GeoJSON dictionary.</p></td>
         <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>hover_style</code></td>
+        <td><code>dict</code></td>
+        <td><p>Style applied on hover. Defaults to {"color": "yellow", "fillOpacity": 0.2}.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>zoom_to_layer</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to zoom to the bounds of the layer. Defaults to True.</p></td>
+        <td><code>True</code></td>
       </tr>
       <tr>
         <td><code>**kwargs</code></td>
         <td></td>
-        <td><p>Additional keyword arguments for the GeoJSON layer.</p></td>
+        <td><p>Additional keyword arguments to pass to ipyleaflet.GeoJSON.</p></td>
         <td><code>{}</code></td>
       </tr>
   </tbody>
@@ -1344,33 +1536,48 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
   <tbody>
       <tr>
         <td><code>ValueError</code></td>
-        <td><p>If the data type is invalid.</p></td>
+        <td><p>If the data type is not supported (must be str, GeoDataFrame, or dict).</p></td>
       </tr>
   </tbody>
 </table>
         <details class="quote">
           <summary>Source code in <code>scorchgeo/scorchgeo.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds vector data to the map.</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add vector data to the map from multiple supported formats.</span>
+
+<span class="sd">    Accepts file paths (shapefiles, GeoJSON), GeoDataFrames, or GeoJSON dictionaries.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data (str, geopandas.GeoDataFrame, or dict): The vector data. Can be a file path, GeoDataFrame, or GeoJSON dictionary.</span>
-<span class="sd">        **kwargs: Additional keyword arguments for the GeoJSON layer.</span>
+<span class="sd">        data (str, geopandas.GeoDataFrame, or dict): Vector data as a file path, GeoDataFrame, or GeoJSON dictionary.</span>
+<span class="sd">        hover_style (dict, optional): Style applied on hover. Defaults to {&quot;color&quot;: &quot;yellow&quot;, &quot;fillOpacity&quot;: 0.2}.</span>
+<span class="sd">        zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.</span>
+<span class="sd">        **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If the data type is invalid.</span>
+<span class="sd">        ValueError: If the data type is not supported (must be str, GeoDataFrame, or dict).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
 
+    <span class="k">if</span> <span class="n">hover_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">hover_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span>
+            <span class="n">gdf</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="n">zoom_to_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="n">zoom_to_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="n">hover_style</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="n">zoom_to_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid data type&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Unsupported data type. Please provide a file path, GeoDataFrame, or GeoJSON dictionary.&quot;</span>
+        <span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
