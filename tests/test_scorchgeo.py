@@ -4,7 +4,7 @@
 
 import unittest
 
-from scorchgeo import scorchgeo
+import scorchgeo
 
 
 class TestScorchgeo(unittest.TestCase):
@@ -12,9 +12,13 @@ class TestScorchgeo(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures, if any."""
+        pass
 
     def tearDown(self):
         """Tear down test fixtures, if any."""
+        pass
 
     def test_000_something(self):
-        """Test something."""
+        """Test that a Map instance can be created."""
+        m = scorchgeo.Map()
+        self.assertIsInstance(m, scorchgeo.Map)
