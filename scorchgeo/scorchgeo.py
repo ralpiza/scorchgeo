@@ -1,6 +1,5 @@
 """Main module."""
 
-import geojson
 import ipyleaflet
 import geopandas as gpd
 
