@@ -24,33 +24,69 @@ class Map(folium.Map):
                 "CartoDB dark_matter", etc.
         """
         folium.TileLayer(tiles=basemap, name=basemap, control=True).add_to(self)
-
-    def add_geojson(self, data, **kwargs):
+    def add_geojson(
+        self,
+        data,
+        zoom_to_layer=True,
+        hover_style=None,
+        **kwargs,
+    ):
         """Add GeoJSON data to the map.
+
+        Loads GeoJSON data from a file path or dictionary, converts it to EPSG:4326
+        if necessary, and adds it as a layer to the map with optional hover styling.
 
         Args:
             data (str or dict): Path to a GeoJSON file or a GeoJSON dictionary.
-            **kwargs: Additional keyword arguments to pass to folium.GeoJson.
+            zoom_to_layer (bool, optional): If True, fit the map bounds to the layer.
+                Defaults to True.
+            hover_style (dict, optional): CSS-style dictionary for hover effects.
+                Defaults to {"color": "yellow", "fillOpacity": 0.2}.
+            **kwargs: Additional keyword arguments passed to folium.GeoJson.
 
         Raises:
-            TypeError: If data is neither a string file path nor a GeoJSON dict.
+            ValueError: If data is not a file path (str) or GeoJSON dictionary (dict).
+
+        Returns:
+            None
         """
         import geopandas as gpd
+
+        if hover_style is None:
+            hover_style = {"color": "yellow", "fillOpacity": 0.2}
+
+        gdf = None
 
         if isinstance(data, str):
             gdf = gpd.read_file(data)
             geojson = gdf.__geo_interface__
+
         elif isinstance(data, dict):
             gdf = gpd.GeoDataFrame.from_features(data["features"])
             geojson = data
+            try:
+                gdf = gpd.GeoDataFrame.from_features(geojson)
+            except AttributeError:
+                gdf = gpd.GeoDataFrame.from_features(
+                    geojson.get("features", [])
+                )
         else:
-            raise TypeError("Data must be a file path (str) or GeoJSON dict")
+            raise ValueError("Data must be a file path or GeoJSON dictionary.")
 
-        folium.GeoJson(data=geojson, **kwargs).add_to(self)
+        if gdf.crs is not None and gdf.crs.to_string() != "EPSG:4326":
+            gdf = gdf.to_crs(epsg=4326)
 
-        # if zoom_to_layer:
-        #     bounds = gdf.total_bounds
-        #     self.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
+        layer = folium.GeoJson(
+            geojson,
+            highlight_function=lambda x: hover_style,
+            **kwargs,
+        )
+
+        layer.add_to(self)
+
+        if zoom_to_layer and gdf is not None:
+            bounds = gdf.total_bounds  # minx, miny, maxx, maxy
+            self.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
 
     def add_shp(self, data, **kwargs):
         """Add a shapefile to the map.
