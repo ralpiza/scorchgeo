@@ -54,6 +54,8 @@ class Map(ipyleaflet.Map):
         """
         if hover_style is None:
             hover_style = {"color": "yellow", "fillOpacity": 0.2}
+        gdf = None
+
         if isinstance(data, str):
             gdf = gpd.read_file(data)
             geojson = gdf.__geo_interface__
@@ -70,7 +72,10 @@ class Map(ipyleaflet.Map):
         layer = ipyleaflet.GeoJSON(data=geojson, hover_style=hover_style, **kwargs)
         self.add_layer(layer)
 
-        if zoom_to_layer:
+        if zoom_to_layer and gdf is not None:
+            if gdf.crs is not None and gdf.crs.to_string() != "EPSG:4326":
+                gdf = gdf.to_crs(epsg=4326)
+
             bounds = gdf.total_bounds
             self.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
 
