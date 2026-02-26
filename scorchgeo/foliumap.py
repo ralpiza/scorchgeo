@@ -15,6 +15,13 @@ class Map(folium.Map):
         """
         super().__init__(location=center, zoom_start=zoom, **kwargs)
 
+    def add_layer_control(self):
+        """Add a layer control widget to the map.
+
+        Allows users to toggle visibility of different layers on the map.
+        """
+        folium.LayerControl().add_to(self)
+
     def add_basemap(self, basemap="OpenStreetMap"):
         """Add a basemap tile layer to the map.
 
@@ -134,10 +141,3 @@ class Map(folium.Map):
             self.add_geojson(data, **kwargs)
         else:
             raise ValueError("Data must be a file path, GeoDataFrame, or GeoJSON dict.")
-
-    def add_layer_control(self):
-        """Add a layer control widget to the map.
-
-        Allows users to toggle visibility of different layers on the map.
-        """
-        folium.LayerControl().add_to(self)
