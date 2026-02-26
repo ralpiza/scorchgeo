@@ -23,11 +23,7 @@ class Map(folium.Map):
                 Common options include "OpenStreetMap", "CartoDB positron",
                 "CartoDB dark_matter", etc.
         """
-        folium.TileLayer(
-            tiles=basemap,
-            name=basemap,
-            control=True
-        ).add_to(self)
+        folium.TileLayer(tiles=basemap, name=basemap, control=True).add_to(self)
 
     def add_geojson(self, data, **kwargs):
         """Add GeoJSON data to the map.
@@ -41,7 +37,6 @@ class Map(folium.Map):
         """
         import geopandas as gpd
 
-    
         if isinstance(data, str):
             gdf = gpd.read_file(data)
             geojson = gdf.__geo_interface__
@@ -50,7 +45,7 @@ class Map(folium.Map):
             geojson = data
         else:
             raise TypeError("Data must be a file path (str) or GeoJSON dict")
-    
+
         folium.GeoJson(data=geojson, **kwargs).add_to(self)
 
         # if zoom_to_layer:
@@ -104,7 +99,7 @@ class Map(folium.Map):
             self.add_geojson(data, **kwargs)
         else:
             raise ValueError("Data must be a file path, GeoDataFrame, or GeoJSON dict.")
-        
+
     def add_layer_control(self):
         """Add a layer control widget to the map.
 
