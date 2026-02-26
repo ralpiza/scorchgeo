@@ -4,7 +4,6 @@ import ipyleaflet
 import geopandas as gpd
 
 
-
 class Map(ipyleaflet.Map):
     def __init__(self, center=[0, 0], zoom=2, height="600px", basemap=None, **kwargs):
         """Initialize an interactive map using ipyleaflet.
