@@ -5,17 +5,29 @@ import geopandas as gpd
 
 
 class Map(ipyleaflet.Map):
-    def __init__(self, center=[0, 0], zoom=2, height="600px", **kwargs):
+    def __init__(self, center=[0, 0], zoom=2, height="600px", basemap=None, **kwargs):
+        """Initialize an interactive map using ipyleaflet.
+
+        Args:
+            center (list): Latitude and longitude coordinates for map center.
+                Defaults to [0, 0].
+            zoom (int): Initial zoom level. Defaults to 2.
+            height (str): Height of the map in CSS units. Defaults to "600px".
+            basemap (str, optional): Name of the basemap to add. Defaults to None.
+            **kwargs: Additional keyword arguments to pass to ipyleaflet.Map.
+        """
         super().__init__(center=center, zoom=zoom, **kwargs)
         self.add_control(ipyleaflet.LayersControl())
         self.layout.height = height
         self.scroll_wheel_zoom = True
 
     def add_basemap(self, basemap="OpenTopoMap"):
-        """Add basemap to the map.
+        """Add a basemap tile layer to the map.
 
         Args:
-            basemap (str, optional): Basemap name. Defaults to "OpenTopoMap".
+            basemap (str, optional): Basemap name from ipyleaflet.basemaps.
+                Defaults to "OpenTopoMap". Examples: "OpenStreetMap", "CartoDB Positron",
+                "CartoDB Voyager", etc.
         """
 
         url = eval(f"ipyleaflet.basemaps.{basemap}").build_url()
@@ -46,7 +58,15 @@ class Map(ipyleaflet.Map):
             gdf = gpd.read_file(data)
             geojson = gdf.__geo_interface__
         elif isinstance(data, dict):
+            # convert GeoJSON dict to GeoDataFrame so that we can
+            # calculate bounds for zooming
             geojson = data
+            try:
+                # geopandas >=0.10 has from_features
+                gdf = gpd.GeoDataFrame.from_features(geojson)
+            except AttributeError:
+                # fallback for older versions
+                gdf = gpd.GeoDataFrame.from_features(geojson.get("features", []))
         layer = ipyleaflet.GeoJSON(data=geojson, hover_style=hover_style, **kwargs)
         self.add_layer(layer)
 
@@ -54,92 +74,57 @@ class Map(ipyleaflet.Map):
             bounds = gdf.total_bounds
             self.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
 
-    def add_shp(self, data, layer_name=None, hover_style=None, **kwargs):
+    def add_shp(self, data, **kwargs):
         """Add a shapefile to the map.
 
         Args:
-            data (str or dict): Path to a shapefile or a GeoJSON dictionary.
-            layer_name (str, optional): Name of the layer. Defaults to the filename if data is a path.
-            hover_style (dict, optional): Style applied on hover. Defaults to {"color": "yellow", "fillOpacity": 0.2}.
-            **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.
+            data (str): Path to the shapefile.
+            **kwargs: Additional keyword arguments to pass to add_geojson.
         """
-        if hover_style is None:
-            hover_style = {"color": "yellow", "fillOpacity": 0.2}
-        if layer_name is None:
-            layer_name = data.split("/")[-1]
-        if isinstance(data, str):
-            gdf = gpd.read_file(data)
-            geojson = gdf.__geo_interface__
-        elif isinstance(data, dict):
-            geojson = data
-        layer = ipyleaflet.GeoJSON(
-            data=geojson, name=layer_name, hover_style=hover_style, **kwargs
-        )
-        self.add_layer(layer)
+        import geopandas as gpd
 
-    def add_gdf(self, gdf, zoom_to_layer=True, **kwargs):
+        gdf = gpd.read_file(data)
+        gdf = gdf.to_crs(epsg=4326)
+        geojson = gdf.__geo_interface__
+        self.add_geojson(geojson, **kwargs)
+
+    def add_gdf(self, gdf, **kwargs):
         """Add a GeoDataFrame to the map.
 
         Converts the GeoDataFrame to WGS84 (EPSG:4326) if necessary before adding to map.
 
         Args:
-            gdf (geopandas.GeoDataFrame): A GeoDataFrame to add to the map.
-            zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.
-            **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.
-
-        Raises:
-            TypeError: If the input is not a GeoDataFrame.
+            gdf (geopandas.GeoDataFrame): The GeoDataFrame to add to the map.
+            **kwargs: Additional keyword arguments to pass to add_geojson.
         """
-        import geopandas as gpd
+        gdf = gdf.to_crs(epsg=4326)
+        geojson = gdf.__geo_interface__
+        self.add_geojson(geojson, **kwargs)
 
-        if not isinstance(gdf, gpd.GeoDataFrame):
-            raise TypeError("Input must be a GeoDataFrame.")
-
-        # Ensure WGS84
-        if gdf.crs != "EPSG:4326":
-            gdf = gdf.to_crs(epsg=4326)
-
-            geojson = gdf.__geo_interface__
-            layer = ipyleaflet.GeoJSON(data=geojson, **kwargs)
-            self.add_layer(layer)
-
-        if zoom_to_layer:
-            bounds = gdf.total_bounds
-            self.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
-
-    def add_vector(self, data, hover_style=None, zoom_to_layer=True, **kwargs):
-        """Add vector data to the map from multiple supported formats.
-
-        Accepts file paths (shapefiles, GeoJSON), GeoDataFrames, or GeoJSON dictionaries.
+    def add_vector(self, data, **kwargs):
+        """Add vector data to the map.
 
         Args:
-            data (str, geopandas.GeoDataFrame, or dict): Vector data as a file path, GeoDataFrame, or GeoJSON dictionary.
-            hover_style (dict, optional): Style applied on hover. Defaults to {"color": "yellow", "fillOpacity": 0.2}.
-            zoom_to_layer (bool, optional): Whether to zoom to the bounds of the layer. Defaults to True.
-            **kwargs: Additional keyword arguments to pass to ipyleaflet.GeoJSON.
+            data (str, geopandas.GeoDataFrame, or dict): Vector data as a file path,
+                GeoDataFrame, or GeoJSON dictionary.
+            **kwargs: Additional keyword arguments to pass to the appropriate add method.
 
         Raises:
-            ValueError: If the data type is not supported (must be str, GeoDataFrame, or dict).
+            ValueError: If data is not a file path, GeoDataFrame, or GeoJSON dict.
         """
         import geopandas as gpd
 
+        # allow callers to supply a custom hover_style
+        hover_style = kwargs.pop("hover_style", None)
         if hover_style is None:
             hover_style = {"color": "yellow", "fillOpacity": 0.2}
 
         if isinstance(data, str):
             gdf = gpd.read_file(data)
-            self.add_gdf(
-                gdf, hover_style=hover_style, zoom_to_layer=zoom_to_layer, **kwargs
-            )
+            self.add_gdf(gdf, hover_style=hover_style, **kwargs)
         elif isinstance(data, gpd.GeoDataFrame):
-            self.add_gdf(
-                data, hover_style=hover_style, zoom_to_layer=zoom_to_layer, **kwargs
-            )
+            self.add_gdf(data, hover_style=hover_style, **kwargs)
         elif isinstance(data, dict):
-            self.add_geojson(
-                data, hover_style=hover_style, zoom_to_layer=zoom_to_layer, **kwargs
-            )
+            self.add_geojson(data, hover_style=hover_style, **kwargs)
         else:
-            raise ValueError(
-                "Unsupported data type. Please provide a file path, GeoDataFrame, or GeoJSON dictionary."
-            )
+            raise ValueError("Data must be a file path, GeoDataFrame, or GeoJSON dict.")
