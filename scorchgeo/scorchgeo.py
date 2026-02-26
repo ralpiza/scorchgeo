@@ -55,7 +55,7 @@ class Map(ipyleaflet.Map):
         if hover_style is None:
             hover_style = {"color": "yellow", "fillOpacity": 0.2}
         gdf = None
-        
+
         if isinstance(data, str):
             gdf = gpd.read_file(data)
             geojson = gdf.__geo_interface__

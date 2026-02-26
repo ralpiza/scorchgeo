@@ -24,6 +24,7 @@ class Map(folium.Map):
                 "CartoDB dark_matter", etc.
         """
         folium.TileLayer(tiles=basemap, name=basemap, control=True).add_to(self)
+
     def add_geojson(
         self,
         data,
@@ -67,9 +68,7 @@ class Map(folium.Map):
             try:
                 gdf = gpd.GeoDataFrame.from_features(geojson)
             except AttributeError:
-                gdf = gpd.GeoDataFrame.from_features(
-                    geojson.get("features", [])
-                )
+                gdf = gpd.GeoDataFrame.from_features(geojson.get("features", []))
         else:
             raise ValueError("Data must be a file path or GeoJSON dictionary.")
 
