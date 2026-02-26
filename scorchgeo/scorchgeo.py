@@ -30,6 +30,8 @@ class Map(ipyleaflet.Map):
                 "CartoDB Voyager", etc.
         """
 
+    def add_basemap(self, basemap="OpenTopoMap"):
+
         url = eval(f"ipyleaflet.basemaps.{basemap}").build_url()
         layer = ipyleaflet.TileLayer(url=url, name=basemap)
         self.add_layer(layer)
@@ -132,4 +134,4 @@ class Map(ipyleaflet.Map):
         elif isinstance(data, dict):
             self.add_geojson(data, hover_style=hover_style, **kwargs)
         else:
-            raise ValueError("Data must be a file path, GeoDataFrame, or GeoJSON dict.")
+            raise ValueError("Invalid data type")
