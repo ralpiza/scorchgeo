@@ -1,0 +1,4 @@
+
+# Foliumap module
+
+::: scorchgeo.foliumap

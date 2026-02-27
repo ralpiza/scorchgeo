@@ -1,3 +1,6 @@
+"""
+This module provides a Map class that extends folium.Map"""
+
 import folium
 import folium.plugins
 import os
