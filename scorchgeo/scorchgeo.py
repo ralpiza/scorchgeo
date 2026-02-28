@@ -136,7 +136,6 @@ class Map(ipyleaflet.Map):
         else:
             raise ValueError("Invalid data type")
 
-
     def add_raster(self, filepath, **kwargs):
 
         from localtileserver import TileClient, get_leaflet_tile_layer
@@ -153,7 +152,11 @@ class Map(ipyleaflet.Map):
         if bounds is None:
             bounds = [[-90, -180], [90, 180]]
 
-        overlay = ipyleaflet.ImageOverlay(url=image,bounds=bounds,**kwargs,)
+        overlay = ipyleaflet.ImageOverlay(
+            url=image,
+            bounds=bounds,
+            **kwargs,
+        )
         self.add(overlay)
 
     def add_video(self, video, bounds=None, **kwargs):
@@ -164,7 +167,10 @@ class Map(ipyleaflet.Map):
         self.add(overlay)
 
     def add_wms_layer(
-        self, url, layers, format="image/png", transparent=True, **kwargs):
+        self, url, layers, format="image/png", transparent=True, **kwargs
+    ):
 
-        layer = ipyleaflet.WMSLayer(url=url, layers=layers, format=format, transparent=transparent, **kwargs)
+        layer = ipyleaflet.WMSLayer(
+            url=url, layers=layers, format=format, transparent=transparent, **kwargs
+        )
         self.add(layer)
