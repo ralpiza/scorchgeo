@@ -135,7 +135,7 @@ class Map(ipyleaflet.Map):
             self.add_geojson(data, hover_style=hover_style, **kwargs)
         else:
             raise ValueError("Invalid data type")
-        
+
     def add_raster(self, filepath, **kwargs):
 
         from localtileserver import TileClient, get_leaflet_tile_layer
@@ -150,17 +150,23 @@ class Map(ipyleaflet.Map):
     def add_image(self, image, bounds=None, **kwargs):
 
         if bounds is None:
-            bounds = [[-90,180], [90, 180]]
-        overlay = ipyleaflet.ImageOverlay(url = image, bounds=bounds, **kwargs)
+            bounds = [[-90, 180], [90, 180]]
+        overlay = ipyleaflet.ImageOverlay(url=image, bounds=bounds, **kwargs)
         self.add(overlay)
 
     def add_video(self, video, bounds=None, opacity=1.0, **kwargs):
 
         if bounds is None:
-            bounds = [[-90,180], [90, 180]]
-        overlay = ipyleaflet.VideoOverlay(url = video, bounds=bounds, opacity=opacity, **kwargs)
+            bounds = [[-90, 180], [90, 180]]
+        overlay = ipyleaflet.VideoOverlay(
+            url=video, bounds=bounds, opacity=opacity, **kwargs
+        )
         self.add(overlay)
 
-    def add_wms_layer(self, url, layers, format="image/png", transparent=True, **kwargs):
-        layer = ipyleaflet.WMSLayer(url=url, layers=layers, format=format, transparent=transparent, **kwargs)
+    def add_wms_layer(
+        self, url, layers, format="image/png", transparent=True, **kwargs
+    ):
+        layer = ipyleaflet.WMSLayer(
+            url=url, layers=layers, format=format, transparent=transparent, **kwargs
+        )
         self.add(layer)
